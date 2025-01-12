@@ -1,1 +1,63 @@
-<p>hello</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic YouTube Iframes with Autoplay</title>
+</head>
+
+<body>
+    <h1>Dynamic YouTube Iframes</h1>
+
+    <div id="video-container"></div> <!-- Container for the iframes -->
+<!-- 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Em5jZca-E6Q?si=b5uAHJXNeILaGK1g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>    
+-->
+
+    <script>
+        // Number of iframes to create
+        const numberOfIframes = 50;
+
+        // YouTube video URL with autoplay and mute parameters
+        const videoUrl = "https://www.youtube.com/embed/Em5jZca-E6Q?enablejsapi=1&autoplay=1&mute=1";
+
+        // Load the YouTube Player API script
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+
+        // Function to initialize players
+        function onYouTubeIframeAPIReady() {
+            const container = document.getElementById('video-container');
+
+            // Create and add the iframes dynamically
+            for (let i = 1; i <= numberOfIframes; i++) {
+                const iframe = document.createElement('iframe');
+                iframe.id = `video${i}`;
+                iframe.width = "200";
+                iframe.height = "150";
+                iframe.src = videoUrl;
+                iframe.title = "YouTube video player";
+                iframe.frameBorder = "0";
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+                iframe.allowFullscreen = true;
+                container.appendChild(iframe);
+            }
+
+            // Initialize YouTube Players for all iframes
+            for (let i = 1; i <= numberOfIframes; i++) {
+                new YT.Player(`video${i}`, {
+                    events: {
+                        'onReady': (event) => {
+                            player.setPlaybackQuality('small');
+                            event.target.playVideo(); // Play video automatically when ready
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
