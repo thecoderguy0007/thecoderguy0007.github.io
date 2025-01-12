@@ -17,7 +17,7 @@
 
     <script>
         // Number of iframes to create
-        const numberOfIframes = 50;
+        const numberOfIframes = 10;
 
         // YouTube video URL with autoplay and mute parameters
         const videoUrl = "https://www.youtube.com/embed/Em5jZca-E6Q?enablejsapi=1&autoplay=1&mute=1";
@@ -35,8 +35,8 @@
             for (let i = 1; i <= numberOfIframes; i++) {
                 const iframe = document.createElement('iframe');
                 iframe.id = `video${i}`;
-                iframe.width = "200";
-                iframe.height = "150";
+                iframe.width = "100";
+                iframe.height = "120";
                 iframe.src = videoUrl;
                 iframe.title = "YouTube video player";
                 iframe.frameBorder = "0";
