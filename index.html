@@ -5,27 +5,178 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic YouTube Iframes with Autoplay</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #iframes {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 315px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            input[type="text"], input[type="number"], button {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            iframe {
+                height: 200px;
+            }
+        }
+
+        /* Laptop/Tablet responsiveness */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            input[type="text"], input[type="number"], button {
+                font-size: 15px;
+                padding: 10px;
+            }
+
+            iframe {
+                height: 250px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Dynamic YouTube Iframes</h1>
+    <form onsubmit="event.preventDefault(); main();">
+        <label for="url">Enter YouTube URL:</label>
+        <input type="text" id="url" placeholder="https://youtu.be/Em5jZca-E6Q" required>
+
+        <label for="numOfIframes">Number of Iframes:</label>
+        <input type="number" id="numOfIframes" min="1" required>
+
+        <button type="submit">Get Views</button>
+    </form>
 
     <div id="video-container"></div> <!-- Container for the iframes -->
-<!-- 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Em5jZca-E6Q?si=b5uAHJXNeILaGK1g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>    
--->
 
     <script>
-        // Number of iframes to create
-        const numberOfIframes = 10;
+        let videoUrl = null;
+        let numberOfIframes = 1;
 
-        // YouTube video URL with autoplay and mute parameters
-        const videoUrl = "https://www.youtube.com/embed/Em5jZca-E6Q?enablejsapi=1&autoplay=1&mute=1";
+        function main() {
+            //extract video id and no. of iframes
+            const url = document.getElementById('url').value;
+            numberOfIframes = document.getElementById('numOfIframes').value;
+            let videoId = extractVideoId(url);
+            // YouTube video URL with autoplay and mute parameters
+            videoUrl = "https://www.youtube.com/embed/"+ videoId +"?enablejsapi=1&autoplay=1&mute=1";
+            onYouTubeIframeAPIReady();
+        }
+
+        function extractVideoId(url) {
+            const regex = /youtu\.be\/([a-zA-Z0-9_-]+)/;
+            const match = url.match(regex);
+            const videoId = match ? match[1] : null;
+            console.log("videoId",videoId)
+            return videoId;
+        }
 
         // Load the YouTube Player API script
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.body.appendChild(tag);
+        // const tag = document.createElement('script');
+        // tag.src = "https://www.youtube.com/iframe_api";
+        // document.body.appendChild(tag);
 
         // Function to initialize players
         function onYouTubeIframeAPIReady() {
@@ -35,8 +186,8 @@
             for (let i = 1; i <= numberOfIframes; i++) {
                 const iframe = document.createElement('iframe');
                 iframe.id = `video${i}`;
-                iframe.width = "100";
-                iframe.height = "120";
+                iframe.width = "200";
+                iframe.height = "150";
                 iframe.src = videoUrl;
                 iframe.title = "YouTube video player";
                 iframe.frameBorder = "0";
